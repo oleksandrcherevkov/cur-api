@@ -19,7 +19,7 @@ builder.Services.AddSwaggerGen();
 // Context
 builder.Services.AddDbContext<MyDbContext>(options =>
 {
-    options.UseSqlServer(configuration.GetConnectionString("Default"));
+    options.UseSqlServer(configuration.GetConnectionString("Default"), x => x.UseNetTopologySuite());
 });
 
 // Application atchitecture

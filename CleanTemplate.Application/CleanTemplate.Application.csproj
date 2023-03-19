@@ -2,7 +2,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CleanTemplate.Domain\CleanTemplate.Domain.csproj" />
     <ProjectReference Include="..\CleanTemplate.Persistence\CleanTemplate.Persistence.csproj" />
-    <ProjectReference Include="..\CleanTemplate.UserContext\CleanTemplate.UserContext.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.5.1" />

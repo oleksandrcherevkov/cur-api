@@ -15,4 +15,15 @@ public class MyDbContext : AuthContext<User, RoleEnum>
         : base(options)
     {
     }
+
+    public DbSet<Bike> Bikes { get; set; }
+    public DbSet<Station> Stations { get; set; }
+    public DbSet<Ticket> Tickets { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(MyDbContext).Assembly);
+    }
 }
