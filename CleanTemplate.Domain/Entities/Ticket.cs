@@ -17,7 +17,7 @@ public class Ticket
     public string BikeId { get; }
     public string UserId { get; }
     public DateTime StartDate { get; }
-    public DateTime? EndDate { get; private set; } = default;
+    public DateTime? EndDate { get; private set; } = null;
 
     public Bike Bike { get; }
     public User User { get; }
