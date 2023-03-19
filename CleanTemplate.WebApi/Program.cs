@@ -1,3 +1,4 @@
+using CleanTemplate.Application.Infrastructure.UserContexts;
 using CleanTemplate.Application.Infrastructurel;
 using CleanTemplate.Persistence;
 using CleanTemplate.WebApi.Infrastructure.Data.Extensions;
@@ -30,6 +31,9 @@ AssemblyScanner.FindValidatorsInAssembly(typeof(ValidationException).Assembly)
 
 // Jwt
 builder.Services.AddJwtGenerator(configuration);
+
+// UserContext
+builder.Services.AddScoped<UserContext>();
 
 var app = builder.Build();
 
