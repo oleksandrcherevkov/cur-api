@@ -15,45 +15,45 @@ public class Bike
     public string Id => _id;
     public Point Location { get; set; }
     public int? CurrentStationId { get; set; }
-    private BikeStatus _status = BikeStatus.Repairing;
-    public BikeStatus Status
+    private BikeStatusEnum _status = BikeStatusEnum.Repairing;
+    public BikeStatusEnum Status
     {
         get => _status;
         set
         {
             switch (_status)
             {
-                case BikeStatus.Active:
+                case BikeStatusEnum.Active:
                     switch (value)
                     {
-                        case BikeStatus.Rented:
-                        case BikeStatus.Repairing:
+                        case BikeStatusEnum.Rented:
+                        case BikeStatusEnum.Repairing:
                             break;
                         default:
                             throw new ArgumentException(string.Format(StatusMissmatchExceptionMessage, _status, value));
                     }
                     break;
-                case BikeStatus.Rented:
+                case BikeStatusEnum.Rented:
                     switch (value)
                     {
-                        case BikeStatus.Active:
-                        case BikeStatus.Repairing:
+                        case BikeStatusEnum.Active:
+                        case BikeStatusEnum.Repairing:
                             break;
                         default:
                             throw new ArgumentException(string.Format(StatusMissmatchExceptionMessage, _status, value));
                     }
                     break;
-                case BikeStatus.Repairing:
+                case BikeStatusEnum.Repairing:
                     switch (value)
                     {
-                        case BikeStatus.Active:
-                        case BikeStatus.Broken:
+                        case BikeStatusEnum.Active:
+                        case BikeStatusEnum.Broken:
                             break;
                         default:
                             throw new ArgumentException(string.Format(StatusMissmatchExceptionMessage, _status, value));
                     }
                     break;
-                case BikeStatus.Broken:
+                case BikeStatusEnum.Broken:
                     throw new ArgumentException(string.Format(StatusMissmatchExceptionMessage, _status, value));
                 default:
                     throw new Exception($"Unknown bike status: {_status}");

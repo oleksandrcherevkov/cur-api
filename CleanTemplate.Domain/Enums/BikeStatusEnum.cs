@@ -1,6 +1,6 @@
 namespace CleanTemplate.Domain.Enums;
 
-public enum BikeStatus
+public enum BikeStatusEnum
 {
     Active,
     Rented,
