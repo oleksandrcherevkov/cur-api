@@ -38,7 +38,6 @@ public class BikesService : IBikesService
         var bike = await context.Bikes
             .AsNoTracking()
             .Where(e => e.Id == id)
-            .Where(e => e.Status == BikeStatusEnum.Active)
             .Select(e => new BikeModel
             {
                 Id = e.Id,
@@ -71,6 +70,7 @@ public class BikesService : IBikesService
         var bikes = await context.Bikes
             .AsNoTracking()
             .Where(e => e.Location.Distance(location) <= radius)
+            .Where(e => e.Status == BikeStatusEnum.Active)
             .Select(e => new BikeModel
             {
                 Id = e.Id,
