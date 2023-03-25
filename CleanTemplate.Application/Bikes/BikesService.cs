@@ -16,7 +16,7 @@ public interface IBikesService
 {
     Task<BikeModel> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken = default);
     Task<BikeModel> CreateBikeAsync(CancellationToken cancellationToken = default);
-    Task<List<BikeModel>> GetActiveBikesInRadiusAsync(double latitude, double longtitude, double radius, CancellationToken cancellationToken = default);
+    Task<List<BikeModel>> GetActiveBikesInRadiusAsync(double longtitude, double latitude, double radius, CancellationToken cancellationToken = default);
     Task<BikeModel> GetBikeByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<BikeModel> RepairBikeAsync(string bikeId, CancellationToken cancellationToken = default);
     Task<BikeModel> WasteBikeAsync(string bikeId, CancellationToken cancellationToken = default);
@@ -66,9 +66,9 @@ public class BikesService : IBikesService
         return bike;
     }
 
-    public async Task<List<BikeModel>> GetActiveBikesInRadiusAsync(double latitude, double longtitude, double radius, CancellationToken cancellationToken = default)
+    public async Task<List<BikeModel>> GetActiveBikesInRadiusAsync(double longtitude, double latitude, double radius, CancellationToken cancellationToken = default)
     {
-        var location = new Point(latitude, longtitude) { SRID = 4326 };
+        var location = new Point(longtitude, latitude) { SRID = 4326 };
         var bikes = await context.Bikes
             .AsNoTracking()
             .Where(e => e.Location.Distance(location) <= radius)
@@ -88,14 +88,14 @@ public class BikesService : IBikesService
     public async Task<BikeModel> CreateBikeAsync(CancellationToken cancellationToken = default)
     {
         var random = new Random();
-        var latitude = random.NextDouble() *
-            (TopologyConstants.LatitudeBordersUkraine.max - TopologyConstants.LatitudeBordersUkraine.min) +
-            TopologyConstants.LatitudeBordersUkraine.min;
         var longtitude = random.NextDouble() *
             (TopologyConstants.LongtitudeBordersUkraine.max - TopologyConstants.LongtitudeBordersUkraine.min) +
             TopologyConstants.LongtitudeBordersUkraine.min;
+        var latitude = random.NextDouble() *
+            (TopologyConstants.LatitudeBordersUkraine.max - TopologyConstants.LatitudeBordersUkraine.min) +
+            TopologyConstants.LatitudeBordersUkraine.min;
         var bike = new Bike();
-        bike.Location = new Point(latitude, longtitude) { SRID = 4326 };
+        bike.Location = new Point(longtitude, latitude) { SRID = 4326 };
         context.Add(bike);
         await context.SaveChangesAsync(cancellationToken);
         return new BikeModel(bike);

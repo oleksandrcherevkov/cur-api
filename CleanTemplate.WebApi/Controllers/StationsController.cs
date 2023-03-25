@@ -20,8 +20,8 @@ public class StationsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllInRadius([FromQuery] double lat, [FromQuery] double lon, [FromQuery] double radius)
+    public async Task<IActionResult> GetAllInRadius([FromQuery] double lon, [FromQuery] double lat, [FromQuery] double radius)
     {
-        return Ok(await stationsService.GetAllInRadius(lat, lon, radius, HttpContext.RequestAborted));
+        return Ok(await stationsService.GetAllInRadius(lon, lat, radius, HttpContext.RequestAborted));
     }
 }
