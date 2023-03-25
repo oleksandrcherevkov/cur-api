@@ -23,6 +23,7 @@ public class UserContextMiddleware
             var id = jwt.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sid).Value;
             var email = jwt.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Email).Value;
             var role = jwt.Claims.First(claim => claim.Type == "role").Value;
+            userContext.Id = id;
             userContext.Email = email;
             userContext.Role = Enum.Parse<RoleEnum>(role);
         }
