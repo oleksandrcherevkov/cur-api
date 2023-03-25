@@ -20,6 +20,7 @@ public class UserContextMiddleware
         {
             var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(token);
+            var id = jwt.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sid).Value;
             var email = jwt.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Email).Value;
             var role = jwt.Claims.First(claim => claim.Type == "role").Value;
             userContext.Email = email;
