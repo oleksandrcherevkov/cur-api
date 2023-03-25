@@ -14,4 +14,6 @@ public class User : UserModel<RoleEnum>
         : base(email, password, role)
     {
     }
+
+    public double BalanceSeconds { get; set; }
 }
