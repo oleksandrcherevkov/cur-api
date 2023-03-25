@@ -9,12 +9,12 @@ public class StationModel
     public StationModel(Station station)
     {
         Id = station.Id;
-        Longtitude = station.Location.X;
-        Altitude = station.Location.Y;
+        Latitude = station.Location.X;
+        Longtitude = station.Location.Y;
         Name = station.Name;
     }
     public int Id { get; set; }
     public string? Name { get; set; }
+    public double Latitude { get; set; }
     public double Longtitude { get; set; }
-    public double Altitude { get; set; }
 }

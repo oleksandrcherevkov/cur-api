@@ -13,7 +13,7 @@ namespace CleanTemplate.Application.Bikes;
 
 public interface IBikesService
 {
-    Task<List<BikeModel>> GetActiveBikesInRadius(double longtitude, double altitude, double radius, CancellationToken cancellationToken);
+    Task<List<BikeModel>> GetActiveBikesInRadius(double latitude, double longtitude, double radius, CancellationToken cancellationToken);
     Task<BikeModel> GetBikeById(string id, CancellationToken cancellationToken);
     Task<Bike> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken);
     Task<Bike> CreateBikeAsync(CancellationToken cancellationToken);
@@ -41,16 +41,16 @@ public class BikesService : IBikesService
             .Select(e => new BikeModel
             {
                 Id = e.Id,
-                Longtitude = e.Location.X,
-                Altitude = e.Location.Y,
+                Latitude = e.Location.X,
+                Longtitude = e.Location.Y,
                 Status = e.Status,
                 Station = e.CurrentStationId != null ?
                     new StationModel
                     {
                         Id = e.CurrentStation!.Id,
                         Name = e.CurrentStation.Name,
-                        Longtitude = e.CurrentStation.Location.X,
-                        Altitude = e.CurrentStation.Location.Y,
+                        Latitude = e.CurrentStation.Location.X,
+                        Longtitude = e.CurrentStation.Location.Y,
                     }
                     : null,
             })
@@ -64,9 +64,9 @@ public class BikesService : IBikesService
         return bike;
     }
 
-    public async Task<List<BikeModel>> GetActiveBikesInRadius(double longtitude, double altitude, double radius, CancellationToken cancellationToken)
+    public async Task<List<BikeModel>> GetActiveBikesInRadius(double latitude, double longtitude, double radius, CancellationToken cancellationToken)
     {
-        var location = new Point(longtitude, altitude) { SRID = 4326 };
+        var location = new Point(latitude, longtitude) { SRID = 4326 };
         var bikes = await context.Bikes
             .AsNoTracking()
             .Where(e => e.Location.Distance(location) <= radius)
@@ -74,8 +74,8 @@ public class BikesService : IBikesService
             .Select(e => new BikeModel
             {
                 Id = e.Id,
-                Longtitude = e.Location.X,
-                Altitude = e.Location.Y,
+                Latitude = e.Location.X,
+                Longtitude = e.Location.Y,
                 Status = e.Status,
             })
             .ToListAsync(cancellationToken);
@@ -86,14 +86,14 @@ public class BikesService : IBikesService
     public async Task<Bike> CreateBikeAsync(CancellationToken cancellationToken)
     {
         var random = new Random();
+        var latitude = random.NextDouble() *
+            (TopologyConstants.LatitudeBordersUkraine.max - TopologyConstants.LatitudeBordersUkraine.min) +
+            TopologyConstants.LatitudeBordersUkraine.min;
         var longtitude = random.NextDouble() *
             (TopologyConstants.LongtitudeBordersUkraine.max - TopologyConstants.LongtitudeBordersUkraine.min) +
             TopologyConstants.LongtitudeBordersUkraine.min;
-        var altitude = random.NextDouble() *
-            (TopologyConstants.AltitudeBordersUkraine.max - TopologyConstants.AltitudeBordersUkraine.min) +
-            TopologyConstants.AltitudeBordersUkraine.min;
         var bike = new Bike();
-        bike.Location = new Point(longtitude, altitude) { SRID = 4326 };
+        bike.Location = new Point(latitude, longtitude) { SRID = 4326 };
         context.Add(bike);
         await context.SaveChangesAsync(cancellationToken);
         return bike;
