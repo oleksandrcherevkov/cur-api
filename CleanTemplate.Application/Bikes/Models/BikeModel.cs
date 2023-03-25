@@ -23,7 +23,6 @@ public class BikeModel
     }
     public string Id { get; set; }
     public double Latitude { get; set; }
-
     public double Longtitude { get; set; }
     public BikeStatusEnum Status { get; set; }
     public StationModel? Station { get; set; }

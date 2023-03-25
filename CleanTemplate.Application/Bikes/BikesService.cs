@@ -3,6 +3,7 @@ using CleanTemplate.Application.Infrastructure.Exceptions;
 using CleanTemplate.Application.Infrastructure.Topology;
 using CleanTemplate.Application.Infrastructure.UserContexts;
 using CleanTemplate.Application.Stations.Models;
+using CleanTemplate.Application.Tickets;
 using CleanTemplate.Domain.Entities;
 using CleanTemplate.Domain.Enums;
 using CleanTemplate.Persistence;
@@ -13,27 +14,28 @@ namespace CleanTemplate.Application.Bikes;
 
 public interface IBikesService
 {
-    Task<List<BikeModel>> GetActiveBikesInRadius(double latitude, double longtitude, double radius, CancellationToken cancellationToken);
-    Task<BikeModel> GetBikeById(string id, CancellationToken cancellationToken);
-    Task<Bike> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken);
-    Task<Bike> CreateBikeAsync(CancellationToken cancellationToken);
-    Task<Bike> RepairBikeAsync(string bikeId, CancellationToken cancellationToken);
-    Task<Bike> WasteBikeAsync(string bikeId, CancellationToken cancellationToken);
+    Task<Bike> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken = default);
+    Task<Bike> CreateBikeAsync(CancellationToken cancellationToken = default);
+    Task<List<BikeModel>> GetActiveBikesInRadiusAsync(double latitude, double longtitude, double radius, CancellationToken cancellationToken = default);
+    Task<BikeModel> GetBikeByIdAsync(string id, CancellationToken cancellationToken = default);
+    Task<Bike> RepairBikeAsync(string bikeId, CancellationToken cancellationToken = default);
+    Task<Bike> WasteBikeAsync(string bikeId, CancellationToken cancellationToken = default);
 }
 
 public class BikesService : IBikesService
 {
-
     private readonly MyDbContext context;
     private readonly UserContext userContext;
+    private readonly TicketsService ticketsService;
 
-    public BikesService(MyDbContext context, UserContext userContext)
+    public BikesService(MyDbContext context, UserContext userContext, TicketsService ticketsService)
     {
         this.context = context;
         this.userContext = userContext;
+        this.ticketsService = ticketsService;
     }
 
-    public async Task<BikeModel> GetBikeById(string id, CancellationToken cancellationToken)
+    public async Task<BikeModel> GetBikeByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         var bike = await context.Bikes
             .AsNoTracking()
@@ -64,7 +66,7 @@ public class BikesService : IBikesService
         return bike;
     }
 
-    public async Task<List<BikeModel>> GetActiveBikesInRadius(double latitude, double longtitude, double radius, CancellationToken cancellationToken)
+    public async Task<List<BikeModel>> GetActiveBikesInRadiusAsync(double latitude, double longtitude, double radius, CancellationToken cancellationToken = default)
     {
         var location = new Point(latitude, longtitude) { SRID = 4326 };
         var bikes = await context.Bikes
@@ -83,7 +85,7 @@ public class BikesService : IBikesService
         return bikes;
     }
 
-    public async Task<Bike> CreateBikeAsync(CancellationToken cancellationToken)
+    public async Task<Bike> CreateBikeAsync(CancellationToken cancellationToken = default)
     {
         var random = new Random();
         var latitude = random.NextDouble() *
@@ -99,7 +101,7 @@ public class BikesService : IBikesService
         return bike;
     }
 
-    public async Task<Bike> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken)
+    public async Task<Bike> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken = default)
     {
         var bike = await context.Bikes.FirstOrDefaultAsync(e => e.Id == bikeId, cancellationToken);
         if (bike is null)
@@ -122,17 +124,23 @@ public class BikesService : IBikesService
         return bike;
     }
 
-    public async Task<Bike> RepairBikeAsync(string bikeId, CancellationToken cancellationToken)
+    public async Task<Bike> RepairBikeAsync(string bikeId, CancellationToken cancellationToken = default)
     {
         var bike = await context.Bikes.FirstOrDefaultAsync(e => e.Id == bikeId, cancellationToken);
         if (bike is null)
         {
             throw new NotFoundException($"Bike with Id {bikeId} does not exist.");
         }
-        if (bike.Status != BikeStatusEnum.Active)
+        if (bike.Status != BikeStatusEnum.Active || bike.Status != BikeStatusEnum.Rented)
         {
             throw new ValidationException($"Bike with Id {bikeId} can not be set on repairing. Current status: {bike.Status}.");
         }
+
+        if (bike.Status == BikeStatusEnum.Rented)
+        {
+            await ticketsService.CloseTicketAsync(bike.Id, cancellationToken);
+        }
+
         bike.Status = BikeStatusEnum.Repairing;
         bike.CurrentStationId = null;
         context.Update(bike);
@@ -140,7 +148,7 @@ public class BikesService : IBikesService
         return bike;
     }
 
-    public async Task<Bike> WasteBikeAsync(string bikeId, CancellationToken cancellationToken)
+    public async Task<Bike> WasteBikeAsync(string bikeId, CancellationToken cancellationToken = default)
     {
         var bike = await context.Bikes.FirstOrDefaultAsync(e => e.Id == bikeId, cancellationToken);
         if (bike is null)
