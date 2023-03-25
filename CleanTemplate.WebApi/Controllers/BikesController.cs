@@ -22,7 +22,6 @@ public class BikesController : BaseController
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "Technician")]
     public async Task<IActionResult> GetById([FromRoute] string id)
     {
         return Ok(await bikesService.GetBikeByIdAsync(id, HttpContext.RequestAborted));
