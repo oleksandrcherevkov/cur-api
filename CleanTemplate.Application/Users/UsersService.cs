@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanTemplate.Application.Users;
 
-public class TicketsService
+public class UsersService
 {
     private readonly MyDbContext context;
 
-    public TicketsService(MyDbContext context)
+    public UsersService(MyDbContext context)
     {
         this.context = context;
     }
