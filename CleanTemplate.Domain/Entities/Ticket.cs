@@ -1,3 +1,4 @@
+using System.Data;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 
@@ -24,6 +25,10 @@ public class Ticket
 
     public void SetEndDate(DateTime date)
     {
+        if (EndDate != null)
+        {
+            throw new ReadOnlyException("Ending date of ticket already been set. This ticket cannot be changed.");
+        }
         EndDate = date;
     }
 }
