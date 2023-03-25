@@ -14,12 +14,12 @@ namespace CleanTemplate.Application.Bikes;
 
 public interface IBikesService
 {
-    Task<Bike> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken = default);
-    Task<Bike> CreateBikeAsync(CancellationToken cancellationToken = default);
+    Task<BikeModel> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken = default);
+    Task<BikeModel> CreateBikeAsync(CancellationToken cancellationToken = default);
     Task<List<BikeModel>> GetActiveBikesInRadiusAsync(double latitude, double longtitude, double radius, CancellationToken cancellationToken = default);
     Task<BikeModel> GetBikeByIdAsync(string id, CancellationToken cancellationToken = default);
-    Task<Bike> RepairBikeAsync(string bikeId, CancellationToken cancellationToken = default);
-    Task<Bike> WasteBikeAsync(string bikeId, CancellationToken cancellationToken = default);
+    Task<BikeModel> RepairBikeAsync(string bikeId, CancellationToken cancellationToken = default);
+    Task<BikeModel> WasteBikeAsync(string bikeId, CancellationToken cancellationToken = default);
 }
 
 public class BikesService : IBikesService
@@ -85,7 +85,7 @@ public class BikesService : IBikesService
         return bikes;
     }
 
-    public async Task<Bike> CreateBikeAsync(CancellationToken cancellationToken = default)
+    public async Task<BikeModel> CreateBikeAsync(CancellationToken cancellationToken = default)
     {
         var random = new Random();
         var latitude = random.NextDouble() *
@@ -98,10 +98,10 @@ public class BikesService : IBikesService
         bike.Location = new Point(latitude, longtitude) { SRID = 4326 };
         context.Add(bike);
         await context.SaveChangesAsync(cancellationToken);
-        return bike;
+        return new BikeModel(bike);
     }
 
-    public async Task<Bike> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken = default)
+    public async Task<BikeModel> ActivateBikeAsync(string bikeId, CancellationToken cancellationToken = default)
     {
         var bike = await context.Bikes.FirstOrDefaultAsync(e => e.Id == bikeId, cancellationToken);
         if (bike is null)
@@ -121,10 +121,10 @@ public class BikesService : IBikesService
         bike.CurrentStationId = stationId;
         context.Update(bike);
         await context.SaveChangesAsync(cancellationToken);
-        return bike;
+        return new BikeModel(bike);
     }
 
-    public async Task<Bike> RepairBikeAsync(string bikeId, CancellationToken cancellationToken = default)
+    public async Task<BikeModel> RepairBikeAsync(string bikeId, CancellationToken cancellationToken = default)
     {
         var bike = await context.Bikes.FirstOrDefaultAsync(e => e.Id == bikeId, cancellationToken);
         if (bike is null)
@@ -145,10 +145,10 @@ public class BikesService : IBikesService
         bike.CurrentStationId = null;
         context.Update(bike);
         await context.SaveChangesAsync(cancellationToken);
-        return bike;
+        return new BikeModel(bike);
     }
 
-    public async Task<Bike> WasteBikeAsync(string bikeId, CancellationToken cancellationToken = default)
+    public async Task<BikeModel> WasteBikeAsync(string bikeId, CancellationToken cancellationToken = default)
     {
         var bike = await context.Bikes.FirstOrDefaultAsync(e => e.Id == bikeId, cancellationToken);
         if (bike is null)
@@ -163,6 +163,6 @@ public class BikesService : IBikesService
         bike.CurrentStationId = null;
         context.Update(bike);
         await context.SaveChangesAsync(cancellationToken);
-        return bike;
+        return new BikeModel(bike);
     }
 }
