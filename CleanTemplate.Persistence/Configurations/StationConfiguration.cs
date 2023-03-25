@@ -10,5 +10,10 @@ internal class StationConfiguration : IEntityTypeConfiguration<Station>
     {
         builder.Property(e => e.Id);
         builder.HasKey(e => e.Id);
+
+        builder
+            .HasMany(e => e.Bikes)
+            .WithOne(e => e.CurrentStation)
+            .HasForeignKey(e => e.CurrentStationId);
     }
 }

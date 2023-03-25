@@ -7,4 +7,5 @@ public class Station
     public int Id { get; }
     public string? Name { get; set; }
     public Point Location { get; set; }
+    public ICollection<Bike> Bikes = new List<Bike>();
 }
