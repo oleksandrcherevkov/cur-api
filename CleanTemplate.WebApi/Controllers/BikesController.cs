@@ -18,7 +18,7 @@ public class BikesController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetInRadius([FromQuery] double lat, [FromQuery] double lon, [FromQuery] double radius)
     {
-        return Ok(await bikesService.GetActiveBikesInRadiusAsync(lat, lon, radius, HttpContext.RequestAborted));
+        return Ok(await bikesService.GetActiveBikesInRadiusAsync(lon, lat, radius, HttpContext.RequestAborted));
     }
 
     [HttpGet("{id}")]

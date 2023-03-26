@@ -27,8 +27,8 @@ public class StationsService
             .Select(e => new StationModel
             {
                 Id = e.Id,
-                Latitude = e.Location.X,
-                Longtitude = e.Location.Y,
+                Longtitude = e.Location.X,
+                Latitude = e.Location.Y,
                 Name = e.Name,
                 BikesCount = e.Bikes.Where(e => e.Status == BikeStatusEnum.Active).Count(),
             })

@@ -9,8 +9,8 @@ public class StationModel
     public StationModel(Station station)
     {
         Id = station.Id;
-        Latitude = station.Location.X;
-        Longtitude = station.Location.Y;
+        Longtitude = station.Location.X;
+        Latitude = station.Location.Y;
         Name = station.Name;
     }
     public int Id { get; set; }

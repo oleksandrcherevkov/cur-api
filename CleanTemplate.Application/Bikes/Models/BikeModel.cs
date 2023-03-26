@@ -16,8 +16,8 @@ public class BikeModel
         }
 
         Id = bike.Id;
-        Latitude = bike.Location.X;
-        Longtitude = bike.Location.Y;
+        Longtitude = bike.Location.X;
+        Latitude = bike.Location.Y;
         Status = bike.Status;
         Station = bike.CurrentStation is not null ? new StationModel(bike.CurrentStation) : null;
     }

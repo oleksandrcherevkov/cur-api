@@ -43,16 +43,16 @@ public class BikesService : IBikesService
             .Select(e => new BikeModel
             {
                 Id = e.Id,
-                Latitude = e.Location.X,
-                Longtitude = e.Location.Y,
+                Longtitude = e.Location.X,
+                Latitude = e.Location.Y,
                 Status = e.Status,
                 Station = e.CurrentStationId != null ?
                     new StationModel
                     {
                         Id = e.CurrentStation!.Id,
                         Name = e.CurrentStation.Name,
-                        Latitude = e.CurrentStation.Location.X,
-                        Longtitude = e.CurrentStation.Location.Y,
+                        Longtitude = e.CurrentStation.Location.X,
+                        Latitude = e.CurrentStation.Location.Y,
                     }
                     : null,
             })
@@ -76,8 +76,8 @@ public class BikesService : IBikesService
             .Select(e => new BikeModel
             {
                 Id = e.Id,
-                Latitude = e.Location.X,
-                Longtitude = e.Location.Y,
+                Longtitude = e.Location.X,
+                Latitude = e.Location.Y,
                 Status = e.Status,
             })
             .ToListAsync(cancellationToken);
