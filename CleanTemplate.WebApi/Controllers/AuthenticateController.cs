@@ -1,17 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using CleanTemplate.Application.Infrastructure.Exceptions;
 using CleanTemplate.Domain.Entities;
 using CleanTemplate.Persistence;
 using CleanTemplate.WebApi.Infrastructure.ExceptionsHandling;
 using CleanTemplate.WebApi.Infrastructure.Jwt;
 using CleanTemplate.WebApi.Models;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using ValidationException = CleanTemplate.Application.Infrastructure.Exceptions.ValidationException;
 
 namespace CleanTemplate.WebApi.Controllers;
 
@@ -30,7 +26,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginReponceModel))]
     [ProducesResponseType(typeof(ExceptionInfo), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> Login([FromBody] LoginModel model)
     {
@@ -56,7 +52,12 @@ public class AuthController : ControllerBase
 
         var token = generator.Generate(authClaims);
 
-        return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+        var wrapper = new LoginReponceModel
+        {
+            Token = new JwtSecurityTokenHandler().WriteToken(token),
+        };
+
+        return Ok(wrapper);
     }
 
     [HttpPost("register")]
