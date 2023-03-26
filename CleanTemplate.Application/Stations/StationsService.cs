@@ -21,7 +21,7 @@ public class StationsService
     public async Task<List<StationModel>> GetAllInRadius(double longtitude, double latitude, double radius, CancellationToken cancellationToken)
     {
         var location = new Point(longtitude, latitude) { SRID = 4326 };
-        var bikes = await context.Stations
+        var stations = await context.Stations
             .AsNoTracking()
             .Where(e => e.Location.Distance(location) <= radius)
             .Select(e => new StationModel
@@ -34,6 +34,6 @@ public class StationsService
             })
             .ToListAsync(cancellationToken);
 
-        return bikes;
+        return stations;
     }
 }
