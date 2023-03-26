@@ -33,6 +33,18 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Cors
+builder.Services.AddCors(options =>
+    {
+        var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<IEnumerable<string>>();
+        options.AddDefaultPolicy(builder =>
+        {
+            builder.WithOrigins(allowedOrigins.ToArray())
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+    });
+
 // Context
 builder.Services.AddDbContext<MyDbContext>(options =>
     {
@@ -90,6 +102,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseCustomExceptionHandler();
 
