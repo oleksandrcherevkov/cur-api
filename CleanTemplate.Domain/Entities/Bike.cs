@@ -1,9 +1,10 @@
 using CleanTemplate.Domain.Enums;
+using CleanTemplate.Domain.Interfaces;
 using NetTopologySuite.Geometries;
 
 namespace CleanTemplate.Domain.Entities;
 
-public class Bike
+public class Bike : ILocation
 {
     private static string StatusMissmatchExceptionMessage = "Bike cannot be transferred to provided status. Current: {0}, New: {1}";
     public Bike()

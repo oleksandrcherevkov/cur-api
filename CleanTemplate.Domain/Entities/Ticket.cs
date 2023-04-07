@@ -1,6 +1,4 @@
 using System.Data;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography;
 
 namespace CleanTemplate.Domain.Entities;
 

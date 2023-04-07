@@ -1,8 +1,9 @@
+using CleanTemplate.Domain.Interfaces;
 using NetTopologySuite.Geometries;
 
 namespace CleanTemplate.Domain.Entities;
 
-public class Station
+public class Station : ILocation
 {
     public int Id { get; }
     public string? Name { get; set; }
