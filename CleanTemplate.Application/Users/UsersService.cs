@@ -1,5 +1,5 @@
 using CleanTemplate.Application.Infrastructure.Exceptions;
-using CleanTemplate.Application.Infrastructure.UserContexts;
+using CleanTemplate.Application.Users.Models;
 using CleanTemplate.Persistence;
 using CleanTemplate.WebApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -34,5 +34,32 @@ public class UsersService
         }
 
         return user;
+    }
+
+    public async Task<UserModel> AddToBalanceId(AddToBalanceModel toAdd, CancellationToken cancellationToken = default)
+    {
+        var user = await context.Users
+            .Where(e => e.Id == toAdd.UserId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (user == null)
+        {
+            throw new ValidationException($"User with id {user} does not exist.");
+        }
+
+        user.BalanceSeconds += toAdd.Amount;
+
+        context.Update(user);
+        await context.SaveChangesAsync(cancellationToken);
+
+        var returnModel = new UserModel
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Role = user.Role,
+            Balance = user.BalanceSeconds,
+        };
+
+        return returnModel;
     }
 }

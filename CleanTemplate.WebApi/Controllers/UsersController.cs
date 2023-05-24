@@ -1,12 +1,9 @@
 using CleanTemplate.Application.Infrastructure.UserContexts;
 using CleanTemplate.Application.Users;
-using CleanTemplate.Domain.Entities;
-using CleanTemplate.Persistence;
+using CleanTemplate.Application.Users.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
 
 namespace CleanTemplate.WebApi.Controllers;
 
@@ -24,5 +21,11 @@ public class UsersController : BaseController
     public async Task<IActionResult> GetLogged([FromServices] UserContext userContext)
     {
         return Ok(await usersService.GetById(userContext.Id, HttpContext.RequestAborted));
+    }
+
+    [HttpPost("balance/add")]
+    public async Task<IActionResult> AddToBalanceId([FromBody] AddToBalanceModel request)
+    {
+        return Ok(await usersService.AddToBalanceId(request, HttpContext.RequestAborted));
     }
 }
