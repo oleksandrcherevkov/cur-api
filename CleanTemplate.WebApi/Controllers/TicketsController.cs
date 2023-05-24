@@ -38,10 +38,11 @@ public class TicketsController : BaseController
         return NoContent();
     }
 
-    [HttpPost("close")]
-    public async Task<IActionResult> Close()
+    [HttpDelete("{bikeId}")]
+
+    public async Task<IActionResult> Close([FromRoute] string bikeId)
     {
-        await ticketsService.CloseTicketAsync(cancellationToken: HttpContext.RequestAborted);
+        await ticketsService.CloseTicketAsync(bikeId, cancellationToken: HttpContext.RequestAborted);
         return NoContent();
     }
 }
