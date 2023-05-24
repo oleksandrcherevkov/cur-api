@@ -131,7 +131,7 @@ public class BikesService : IBikesService
         {
             throw new NotFoundException($"Bike with Id {bikeId} does not exist.");
         }
-        if (bike.Status != BikeStatusEnum.Active || bike.Status != BikeStatusEnum.Rented)
+        if (bike.Status != BikeStatusEnum.Active && bike.Status != BikeStatusEnum.Rented)
         {
             throw new ValidationException($"Bike with Id {bikeId} can not be set on repairing. Current status: {bike.Status}.");
         }
