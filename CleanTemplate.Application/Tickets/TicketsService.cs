@@ -96,7 +96,9 @@ public class TicketsService
         {
             ticket = await context.Tickets
                 .Where(e => e.BikeId == bikeId)
+                .Where(e => e.UserId == userContext.Id)
                 .Where(e => e.EndDate == null)
+                .OrderBy(e => e.Id)
                 .LastOrDefaultAsync(cancellationToken);
         }
         else
